@@ -1,6 +1,7 @@
 var Config = require('./config.js')
 
 var mysql = require('mysql');
+const util = require("util");
 var connection;
 
 function doConnect() {
@@ -53,5 +54,7 @@ connection.on("error", function (err) {
   });
 
 });
+
+connection.pquery = util.promisify(connection.query);
 
 module.exports = connection;

@@ -1,4 +1,6 @@
 var app = require("./methods.js");
+const redis = require('./redis');
+const sql = require('./db');
 const fs = require('fs');
 
 var dir = './bases';
@@ -64,3 +66,37 @@ app.express.post("/gangs/removezone", function(req, res){
     });
     
 })
+
+const validSettings = ["Experience", "kills", "deaths", "Credits", "Money"];
+async function getLeaderboard(kind) {
+    if (!kind) kind = "score";
+
+    console.log("Getting leaderboard for " + kind)
+    if (validSettings.indexOf(kind) == -1) {
+        console.log("Invalid kind " + kind);
+        return {};
+    }
+
+    const leaderboard = await redis.hget("leaderboard", kind);
+    if (leaderboard != true && leaderboard) return leaderboard;
+
+    let sqlData = await sql.pquery("SELECT * FROM gangs_list ORDER BY " + kind + " DESC LIMIT 10");
+    const leaderboardString = JSON.stringify(sqlData);
+    await redis.hset("leaderboard", kind, leaderboardString);
+    await redis.expire("leaderboard", 60);
+
+    return leaderboardString;
+}
+
+app.express.get('/gangs/leaderboard/:sort', async (req, res) => {
+    try {
+        const sort = req.params.sort;
+        const data = await getLeaderboard(sort);
+        if (!data) return res.status(404).send('Not Found');
+        return res.send(data).status(200);
+    } catch (err) {
+        console.error('Requests [gangs] (ERROR) >> Error Getting gangs/leaderboard'.red);
+        console.error(err);
+        return res.status(400).send('Bad Request');
+    }
+});
