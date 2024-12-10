@@ -16,7 +16,7 @@
     "express": "^4.17.1",
     "forever-monitor": "^2.0.0",
     "log-timestamp": "^0.3.0",
-    "mysql": "^2.18.1",
+    "mysql": "github:felixge/node-mysql",
     "nodemailer": "^6.6.2",
     "nodemon": "^2.0.20",
     "redis": "^3.1.2",

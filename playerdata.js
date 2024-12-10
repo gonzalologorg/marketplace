@@ -68,17 +68,11 @@ function redownloadItems(res){
         }
         result.forEach(element => {
             var data = JSON.parse(element.itemData);
-            var builder = {
-                name : data.name,
-                icon : data.iconID.endsWith(".mdl") || (data.iconID == "weapon" || data.iconID == "credits") ? null : "https://i.imgur.com/" + data.iconID + ".png",
-                color : data.color,
-                type : data.type,
-                rarity : data.itemColorCode,
-                itemID : element.itemID
-            };
+		data.icon = data.iconID.endsWith(".mdl") || (data.iconID == "weapon" || data.iconID == "credits") ? null : "https://i.imgur.com/" + data.iconID + ".png",
+
             itemSlot.push(element.itemID);
             itemNames.push(data.name.toLowerCase());
-            itemsData[element.itemID] = builder;
+            itemsData[element.itemID] = data;
         });
         if (res) {
             res.json(itemsData);

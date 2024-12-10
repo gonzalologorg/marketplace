@@ -1,8 +1,8 @@
  var cfg = {
     db : {
-        user : "asapgaming",
-        password : "ZYieQmdLYMVyKo72",
-        ip : "145.239.205.161",
+        user : "kankerwhore",
+        password : "253208fsbfsef925nnfs979474",
+        ip : "158.220.91.198",
         port : 3306,
         default : "asap_players"
     },
